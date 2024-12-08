@@ -22,18 +22,21 @@ vector<uint64_t> split(const string &s, const string &delimiter) {
     return res;
 }
 
+static function<uint64_t(uint64_t, uint64_t)> ops[] = {
+    [](uint64_t a, uint64_t b) { return a + b; },
+    [](uint64_t a, uint64_t b) { return a * b; },
+    [](uint64_t a, uint64_t b) { return a * pow(10, floor(log10(b)) + 1) + b; },
+};
+
 bool does_match(uint64_t res, uint64_t part, vector<uint64_t> &v, int i) {
     if (part > res)
         return false;
     if (i == v.size())
         return part == res;
-    uint64_t arg = v[i];
-    uint64_t mul = part * arg;
-    uint64_t add = part + arg;
-    uint64_t cat = part * pow(10, floor(log10(arg)) + 1) + arg;
-    return does_match(res, mul, v, i + 1)
-            || does_match(res, add, v, i + 1)
-            || does_match(res, cat, v, i + 1);
+    for (auto op : ops)
+        if (does_match(res, op(part, v[i]), v, i + 1))
+            return true;
+    return false;
 }
 
 int main() {

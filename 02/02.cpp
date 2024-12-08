@@ -33,7 +33,6 @@ bool is_safe(vector<int> &levels) {
 int main() {
     int result = 0;
 
-    const regex linerex("([%&]?)(.*) -> (.*)");
     while (true) {
         string s;
         getline(cin, s);
