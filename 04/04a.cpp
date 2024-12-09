@@ -1,14 +1,4 @@
-#include <algorithm> 
-#include <iostream>
-#include <queue>
-#include <regex>
-#include <set>
-#include <sstream>
-#include <string>
-#include <unordered_set>
-#include <vector>
-
-using namespace std;
+#include "../lib.hpp"
 
 vector<string> grid;
 int m, n;

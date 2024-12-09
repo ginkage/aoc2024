@@ -1,25 +1,4 @@
-#include <algorithm> 
-#include <iostream>
-#include <queue>
-#include <regex>
-#include <set>
-#include <sstream>
-#include <string>
-#include <unordered_set>
-#include <vector>
-
-using namespace std;
-
-vector<string> split(const string &s, const string &delimiter) {
-    vector<string> res;
-    size_t pos_start = 0;
-    for (size_t pos_end, delim_len = delimiter.length();
-            (pos_end = s.find(delimiter, pos_start)) != string::npos;
-            pos_start = pos_end + delim_len)
-        res.push_back(s.substr(pos_start, pos_end - pos_start));
-    res.push_back(s.substr(pos_start));
-    return res;
-}
+#include "../lib.hpp"
 
 int main() {
     int result = 0;
@@ -31,7 +10,7 @@ int main() {
         getline(cin, s);
         if (!cin) break;
 
-        for (auto line : split(s, ")")) {
+        for (auto line : split_s(s, ")")) {
             smatch linematch;
             if (regex_match(line, linematch, enrex) && linematch.size() == 2)
                 enable = linematch[1].str().size() == 0;
