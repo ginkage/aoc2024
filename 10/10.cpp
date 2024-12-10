@@ -9,35 +9,37 @@ int num_at(int i, int j) {
     return -1;
 }
 
-vector<vector<bool>> visit;
+vector<vector<int>> rating;
 queue<pair<int, int>> q;
 
-void maybe_push(int i, int j, int num) {
-    if (num_at(i, j) == num && !visit[i][j]) {
-        q.emplace(i, j);
-//        visit[i][j] = true;
+void maybe_push(int i, int j, int num, int r) {
+    if (num_at(i, j) == num) {
+        if (rating[i][j] == 0)
+            q.emplace(i, j);
+        rating[i][j] += r;
     }
 }
 
 int score(int i, int j) {
     int sc = 0;
 
-    visit.assign(n, vector<bool>(m, false));
-    maybe_push(i, j, 0);
+    rating.assign(n, vector<int>(m, 0));
+    maybe_push(i, j, 0, 1);
 
     while (!q.empty()) {
         auto coord = q.front();
         q.pop();
 
         int num = num_at(coord.first, coord.second);
+        int r = rating[coord.first][coord.second];
         if (num == 9)
-            sc++;
+            sc += r; // sc++ for A
         else {
             num++;
-            maybe_push(coord.first + 1, coord.second, num);
-            maybe_push(coord.first - 1, coord.second, num);
-            maybe_push(coord.first, coord.second + 1, num);
-            maybe_push(coord.first, coord.second - 1, num);
+            maybe_push(coord.first + 1, coord.second, num, r);
+            maybe_push(coord.first - 1, coord.second, num, r);
+            maybe_push(coord.first, coord.second + 1, num, r);
+            maybe_push(coord.first, coord.second - 1, num, r);
         }
     }
 
