@@ -9,6 +9,7 @@
 #include <unordered_set>
 #include <vector>
 #include <Eigen/Dense>
+#include <png++/png.hpp>
 
 using namespace std;
 
