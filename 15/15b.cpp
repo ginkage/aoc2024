@@ -54,13 +54,9 @@ void try_move(char c) {
 void print() {
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++)
-            if (i == ci && j == cj)
-                cout << '@';
-            else
-                cout << grid[i][j];
+            cout << grid[i][j];
         cout << endl;
     }
-    cout << endl;
 }
 
 int main() {
@@ -79,7 +75,7 @@ int main() {
             else if (c == '@') {
                 ci = grid.size();
                 cj = ss.str().size();
-                ss << "..";
+                ss << "@.";
             }
         grid.push_back(ss.str());
     }
@@ -95,9 +91,12 @@ int main() {
         moves += s;
     }
 
-    print();
+    // cout << "\033[2J\033[1;1H";
+    // print();
     for (char c : moves) {
         try_move(c);
+        // usleep(100000);
+        // cout << "\033[2J\033[1;1H";
         // print();
     }
 

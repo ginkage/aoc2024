@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include <unistd.h>
 #include <Eigen/Dense>
 #include <png++/png.hpp>
 
