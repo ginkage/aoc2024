@@ -4,9 +4,7 @@ vector<string> grid;
 int m, n;
 
 union hasher {
-    struct {
-        int16_t i, j, di, dj;
-    } pos;
+    struct { int16_t i, j, di, dj; } pos;
     uint64_t hash;
 };
 
@@ -66,12 +64,8 @@ int main() {
         int16_t i = s.h.pos.i, j = s.h.pos.j, di = s.h.pos.di, dj = s.h.pos.dj;
         for (int k = 0; k < 4; k++) {
             int16_t ndi = ci[k], ndj = cj[k];
-            if (grid[i + ndi][j + ndj] != '#') {
-                long ds = 1;
-                if (ndi == -di && ndj == -dj)
-                    ds += 2000;
-                else if (ndi != di || ndj != dj)
-                    ds += 1000;
+            if ((ndi != -di || ndj != -dj) && grid[i + ndi][j + ndj] != '#') {
+                long ds = (ndi == di && ndj == dj) ? 1 : 1001;
                 q.push(state { .h = { .pos = { i + ndi, j + ndj, ndi, ndj } }, .prev = s.h.hash, .score = s.score + ds });
             }
         }
