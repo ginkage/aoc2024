@@ -37,10 +37,7 @@ bool iterate(vector<int> &program, long init_a, int k) {
                     reg_b ^= reg_c;
                     break;
                 case 5: // out
-                    if ((combo & 7) != program[j])
-                        halt = true;
-                    else
-                        j++;
+                    halt = (combo & 7) != program[j++];
                     break;
                 case 6: // bdv
                     reg_b = reg_a >> combo;
