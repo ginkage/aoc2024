@@ -9,48 +9,29 @@ bool iterate(vector<int> &program, long init_a, int k) {
     init_a <<= 3;
     for (int t = 0; t < 8; t++) {
         bool halt = false;
-        int j = k, ptr = 0;
+        int j = k, ptr = 0, op, val, combo;
         long reg_a = init_a + t, reg_b = 0, reg_c = 0;
+
+        std::function<void()> ops[] = {
+            [&]() { reg_a >>= combo;                    },  // adv
+            [&]() { reg_b ^= val;                       },  // bxl
+            [&]() { reg_b = combo & 7;                  },  // bst
+            [&]() { if (reg_a != 0) ptr = val;          },  // jnz
+            [&]() { reg_b ^= reg_c;                     },  // bxc
+            [&]() { halt = (combo & 7) != program[j++]; },  // out
+            [&]() { reg_b = reg_a >> combo;             },  // bdv
+            [&]() { reg_c = reg_a >> combo;             },  // cdv
+        };
+
         while (ptr < program.size() && !halt) {
-            int op = program[ptr++];
-            long val = program[ptr++], combo = val;
-
-            if (val == 4) combo = reg_a;
-            else if (val == 5) combo = reg_b;
-            else if (val == 6) combo = reg_c;
-
-            switch (op) {
-                case 0: // adv
-                    reg_a >>= combo;
-                    break;
-                case 1: // bxl
-                    reg_b ^= val;
-                    break;
-                case 2: // bst
-                    reg_b = combo & 7;
-                    break;
-                case 3: // jnz
-                    if (reg_a != 0)
-                        ptr = val;
-                    break;
-                case 4: // bxc
-                    reg_b ^= reg_c;
-                    break;
-                case 5: // out
-                    halt = (combo & 7) != program[j++];
-                    break;
-                case 6: // bdv
-                    reg_b = reg_a >> combo;
-                    break;
-                case 7: // cdv
-                    reg_c = reg_a >> combo;
-                    break;
-            }
+            op = program[ptr++];
+            val = program[ptr++];
+            combo = (val == 4 ? reg_a : (val == 5 ? reg_b : (val == 6 ? reg_c : val)));
+            ops[op]();
         }
 
-        if (!halt)
-            if (iterate(program, init_a + t, k - 1))
-                return true;
+        if (!halt && iterate(program, init_a + t, k - 1))
+            return true;
     }
 
     return false;
