@@ -23,7 +23,7 @@ bool iterate(vector<int> &program, long init_a, int k) {
             [&]() { reg_c = reg_a >> combo;             },  // cdv
         };
 
-        while (ptr < program.size() && !halt) {
+        while (ptr < program.size() && !halt && j == k) {
             op = program[ptr++];
             val = program[ptr++];
             combo = (val == 4 ? reg_a : (val == 5 ? reg_b : (val == 6 ? reg_c : val)));
