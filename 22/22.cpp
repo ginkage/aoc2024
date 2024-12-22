@@ -1,52 +1,35 @@
 #include "../lib.hpp"
 
-union hasher_t {
-    struct { int8_t d1, d2, d3, d4; } seq;
-    uint32_t hash;
-};
-
-static inline long step(long secret) {
-    secret = (secret ^ (secret << 6)) & 0xFFFFFF;
-    secret = (secret ^ (secret >> 5)) & 0xFFFFFF;
-    secret = (secret ^ (secret << 11)) & 0xFFFFFF;
-    return secret;
-}
-
 int main() {
-    unordered_map<uint32_t, uint64_t> sum;
+    int64_t result_a = 0;
+    unordered_map<uint32_t, int> sum;
     while (true) {
         string s;
         getline(cin, s);
         if (!cin) break;
 
-        long secret = stol(s);
-        int price = secret % 10;
-        hasher_t h;
+        uint32_t hash = 0;
         unordered_set<uint32_t> sold;
-
+        int secret = stoi(s), prev = secret % 10;
         for (int i = 0; i < 2000; i++) {
-            long next = step(secret);
-            int np = next % 10, dif = np - price;
-
-            h.seq.d1 = h.seq.d2;
-            h.seq.d2 = h.seq.d3;
-            h.seq.d3 = h.seq.d4;
-            h.seq.d4 = dif;
-
-            if (i >= 3 && (sold.find(h.hash) == sold.end())) {
-                sum[h.hash] += np;
-                sold.insert(h.hash);
+            secret = (secret ^ (secret << 6)) & 0xFFFFFF;
+            secret = (secret ^ (secret >> 5)) & 0xFFFFFF;
+            secret = (secret ^ (secret << 11)) & 0xFFFFFF;
+            int price = secret % 10, dif = price - prev;
+            hash = (hash << 8) | (dif & 0xFF);
+            if (i >= 3 && (sold.find(hash) == sold.end())) {
+                sum[hash] += price;
+                sold.insert(hash);
             }
-
-            secret = next;
-            price = np;
+            prev = price;
         }
+        result_a += secret;
     }
 
-    uint64_t result = 0;
+    int result_b = 0;
     for (auto &p : sum)
-        result = max(result, p.second);
-    cout << result << endl;
+        result_b = max(result_b, p.second);
+    cout << result_a << ' ' << result_b << endl;
 
     return 0;
 }
