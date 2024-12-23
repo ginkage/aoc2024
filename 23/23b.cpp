@@ -23,48 +23,28 @@ int main() {
         name[it.second] = it.first;
 
     vector<int> best;
-    for (int id = 0; id < n; id++) {
-        unordered_set<int> clique;
-        clique.insert(id);
-        for (int jd : connect[id])
-            clique.insert(jd);
+    for (int i = 0; i < n; i++) {
+        unordered_set<int> clique = connect[i];
+        clique.insert(i);
 
-        bool left;
-        do {
-            left = false;
-            for (int i : clique) {
-                int match = 0;
-                for (int j : connect[i])
-                    if (clique.find(j) != clique.end())
-                        match++;
-                if (match == 1) {
-                    clique.erase(i);
-                    left = true;
-                    break;
-                }
-            }
-        } while (left);
-
-        bool perfect = true;
-        for (int i : clique) {
-            int match = 0;
-            for (int j : connect[i])
-                if (clique.find(j) != clique.end())
-                    match++;
-            if (match + 1 != clique.size()) {
-                perfect = false;
-                break;
-            }
+        for (int j : connect[i]) {
+            unordered_set<int> &edge = connect[j];
+            vector<int> out;
+            for (int k : clique)
+                if (k != j && edge.find(k) == edge.end())
+                    out.push_back(k);
+            if (out.size() < 3)
+                for (int k : out)
+                    clique.erase(k);
         }
 
-        if (perfect && clique.size() > best.size())
+        if (clique.size() > best.size())
             best.assign(clique.begin(), clique.end());
     }
 
     set<string> result;
     for (int id : best)
         result.insert(name[id]);
-
     for (const string &nm : result)
         cout << ',' << nm;
     cout << endl;
