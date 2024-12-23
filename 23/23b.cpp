@@ -33,11 +33,11 @@ int main() {
         do {
             left = false;
             for (int i : clique) {
-                unordered_set<int> sub;
+                int match = 0;
                 for (int j : connect[i])
                     if (clique.find(j) != clique.end())
-                        sub.insert(j);
-                if (sub.size() == 1) {
+                        match++;
+                if (match == 1) {
                     clique.erase(i);
                     left = true;
                     break;
@@ -47,11 +47,11 @@ int main() {
 
         bool perfect = true;
         for (int i : clique) {
-            unordered_set<int> sub;
+            int match = 0;
             for (int j : connect[i])
                 if (clique.find(j) != clique.end())
-                    sub.insert(j);
-            if (sub.size() + 1 != clique.size()) {
+                    match++;
+            if (match + 1 != clique.size()) {
                 perfect = false;
                 break;
             }
