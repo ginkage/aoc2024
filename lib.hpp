@@ -2,6 +2,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <queue>
 #include <regex>
 #include <set>
@@ -29,6 +30,12 @@ int remap(string name) {
     names[name] = id;
     return id;
 }
+
+struct Hash {
+    size_t operator ()(const pair<int, int>& k) const {
+        return ((uint64_t)k.first << 32) + k.second;
+    }
+};
 
 vector<string> split_s(const string &s, const string &delimiter) {
     vector<string> res;
@@ -62,5 +69,4 @@ vector<uint64_t> split_u64(const string &s, const string &delimiter) {
     res.push_back(stoul(s.substr(pos_start)));
     return res;
 }
-
 
